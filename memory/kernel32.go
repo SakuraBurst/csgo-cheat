@@ -1,9 +1,10 @@
 package memory
 
 import (
-	"log"
 	"syscall"
 	"unsafe"
+
+	"github.com/barbarbar338/csgo-cheat-go/logger"
 )
 
 var (
@@ -26,9 +27,9 @@ var (
 func EnumProcessModules(hProcess HANDLE, cb uintptr, lpcbNeeded uintptr) (uintptr, []uint16, error) {
 
 	defer func() {
-		log.Println("done")
+		logger.DebugLogger.Println("Done")
 		if x := recover(); x != nil {
-			log.Printf("run time panic: %v", x)
+			logger.ErrorLogger.Fatalln("Runtime panic: ", x)
 		}
 	}()
 

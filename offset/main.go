@@ -3,7 +3,6 @@ package offset
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -53,12 +52,12 @@ func offsetsOutdated(Offsets SOffsets) bool {
 func getCurrentCSGOUpdate() string {
 	res, err := http.Get("https://blog.counter-strike.net/index.php/category/updates/")
 	if err != nil {
-		log.Println("An erro occured while fetching CS:GO update:", chalk.Red.Color(err.Error()))
+		logger.ErrorLogger.Fatalln("An erro occured while fetching CS:GO update:", chalk.Red.Color(err.Error()))
 	}
 
 	preBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Println("An error occured while marshalling CS:GO update:", chalk.Red.Color(err.Error()))
+		logger.ErrorLogger.Fatalln("An error occured while marshalling CS:GO update:", chalk.Red.Color(err.Error()))
 
 	}
 
