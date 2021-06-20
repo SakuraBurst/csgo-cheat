@@ -26,52 +26,53 @@ const (
 	event_icon = "☄"
 	debug_icon = "☢"
 	log_icon = "✎"
+	log_folder = "logs"
 )
 
 func init() {
-    infoFile, err := os.OpenFile("logger/logs/INFO.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+    infoFile, err := os.OpenFile(log_folder + "/INFO.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatal(err)
     }
 	infoWriter := io.MultiWriter(os.Stdout, infoFile)
 	InfoLogger = log.New(infoWriter, chalk.Blue.Color(info_icon) + " - ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	successFile, err := os.OpenFile("logger/logs/SUCCESS.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	successFile, err := os.OpenFile(log_folder + "/SUCCESS.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatal(err)
     }
 	successWriter := io.MultiWriter(os.Stdout, successFile)
 	SuccessLogger = log.New(successWriter, chalk.Green.Color(success_icon) + " - ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	warningFile, err := os.OpenFile("logger/logs/WARNING.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	warningFile, err := os.OpenFile(log_folder + "/WARNING.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatal(err)
     }
 	warningWriter := io.MultiWriter(os.Stdout, warningFile)
 	WarningLogger = log.New(warningWriter, chalk.Yellow.Color(warning_icon) + " - ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	errorFile, err := os.OpenFile("logger/logs/ERROR.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	errorFile, err := os.OpenFile(log_folder + "/ERROR.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatal(err)
     }
 	errorWriter := io.MultiWriter(os.Stdout, errorFile)
 	ErrorLogger = log.New(errorWriter, chalk.Red.Color(warning_icon) + " - ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	eventFile, err := os.OpenFile("logger/logs/EVENT.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	eventFile, err := os.OpenFile(log_folder + "/EVENT.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatal(err)
     }
 	eventWriter := io.MultiWriter(os.Stdout, eventFile)
 	EventLogger = log.New(eventWriter, chalk.Magenta.Color(event_icon) + " - ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	debugFile, err := os.OpenFile("logger/logs/DEBUG.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	debugFile, err := os.OpenFile(log_folder + "/DEBUG.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatal(err)
     }
 	debugWriter := io.MultiWriter(os.Stdout, debugFile)
 	DebugLogger = log.New(debugWriter, chalk.Yellow.Color(debug_icon) + " - ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	logFile, err := os.OpenFile("logger/logs/LOG.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	logFile, err := os.OpenFile(log_folder + "/LOG.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatal(err)
     }
