@@ -2,6 +2,7 @@ package packages
 
 import (
 	"syscall"
+	"time"
 	"unsafe"
 
 	"github.com/barbarbar338/csgo-cheat-go/memory"
@@ -72,7 +73,7 @@ func CheckPlayers() {
 
 			}
 		}
-
+		time.Sleep(time.Microsecond)
 	}
 
 	// time.Sleep(time.Millisecond)

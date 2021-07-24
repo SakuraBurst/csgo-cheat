@@ -122,13 +122,15 @@ func GetModuleHandle(lpModuleName string) HMODULE {
 }
 
 func OpenProcess(dwDesiredAccess uint32, bInheritHandle bool, dwProcessId uint32) (HANDLE, error) {
+	fmt.Println(dwDesiredAccess)
 	inHandle := 0
 	if bInheritHandle {
 		inHandle = 1
 	}
-
+	mm := syscall.STANDARD_RIGHTS_REQUIRED | syscall.SYNCHRONIZE | 0xffff
+	fmt.Println(mm)
 	ret, _, err := procOpenProcess.Call(
-		uintptr(dwDesiredAccess),
+		uintptr(mm),
 		uintptr(inHandle),
 		uintptr(dwProcessId),
 	)
