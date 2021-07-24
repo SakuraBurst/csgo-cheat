@@ -2,16 +2,16 @@ package memory
 
 import (
 	"bytes"
+	"fmt"
 	"unsafe"
 )
 
 func GetProcessID(process string) (uint32, bool) {
 	var snap HANDLE
 	var pe32 PROCESSENTRY32
-
 	snap = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0)
+	fmt.Println(snap)
 	pe32.DwSize = uint32(unsafe.Sizeof(pe32))
-
 	exit := Process32First(snap, &pe32)
 	if !exit {
 		CloseHandle(snap)
@@ -23,8 +23,8 @@ func GetProcessID(process string) (uint32, bool) {
 				return pe32.Th32ProcessID, true
 			}
 		}
+		return 0, false
 	}
-	return 0, false
 }
 
 func GetModule(module string, PID uint32) (MODULEENTRY32, bool, unsafe.Pointer) {
@@ -41,7 +41,7 @@ func GetModule(module string, PID uint32) (MODULEENTRY32, bool, unsafe.Pointer) 
 	} else {
 		for i := true; i; i = Module32Next(snap, &me32) {
 			parsed := parseint8(me32.SzModule[:])
-			if parsed == module  {
+			if parsed == module {
 				return me32, true, unsafe.Pointer(me32.ModBaseAddr)
 			}
 		}

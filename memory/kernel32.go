@@ -1,6 +1,7 @@
 package memory
 
 import (
+	"fmt"
 	"syscall"
 	"unsafe"
 
@@ -46,6 +47,7 @@ func EnumProcessModules(hProcess HANDLE, cb uintptr, lpcbNeeded uintptr) (uintpt
 }
 
 func WriteProcessMemory(hProcess HANDLE, lpBaseAddress uintptr, lpBuffer unsafe.Pointer, nSize uintptr) (uintptr, error) {
+	fmt.Println(hProcess, lpBaseAddress, lpBuffer, nSize)
 	ret, _, err := procWriteProcessMemory.Call(
 		uintptr(hProcess),
 		uintptr(lpBaseAddress),
