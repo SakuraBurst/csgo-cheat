@@ -1,23 +1,22 @@
 package packages
 
 import (
-	"unsafe"
-
-	"github.com/barbarbar338/csgo-cheat-go/memory"
-	"github.com/barbarbar338/csgo-cheat-go/offset"
-	"github.com/barbarbar338/csgo-cheat-go/utils"
+	errorhelper "github.com/SakuraBurst/csgo-cheat/errorHelper"
+	"github.com/SakuraBurst/csgo-cheat/memory"
+	"github.com/SakuraBurst/csgo-cheat/offset"
+	"github.com/SakuraBurst/csgo-cheat/utils"
 )
 
-var flash = uintptr(0x0)
+var flash = []byte{0}
 
-func NoFlash() {
-	player := utils.GetPlayer()
-	if player != 0 {
-		var flashValue uintptr
-		memory.ReadProcessMemory(utils.Process, memory.LPCVOID(player + uintptr(offset.Netvars.MFlFlashMaxAlpha)) , &flashValue, unsafe.Sizeof(flashValue))
-		
-		if flash != 0 {
-			memory.WriteProcessMemory(utils.Process, player + uintptr(offset.Netvars.MFlFlashMaxAlpha), unsafe.Pointer(&flash), unsafe.Sizeof(flash))
+func NoFlash(proc memory.Process) {
+	player := utils.GetPlayer(proc)
+	if player.BaseAddress != 0 {
+		flashValue, err := proc.ReadInt(player.BaseAddress + uintptr(offset.Netvars.MFlFlashMaxAlpha))
+		errorhelper.CheckErrorAndLog(err)
+		if flashValue != 0 {
+			err = proc.WriteInt(player.BaseAddress+uintptr(offset.Netvars.MFlFlashMaxAlpha), 0)
+			errorhelper.CheckErrorAndLog(err)
 		}
 	}
 }

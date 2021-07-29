@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/barbarbar338/csgo-cheat-go/logger"
+	"github.com/SakuraBurst/csgo-cheat/logger"
 	"github.com/ttacon/chalk"
 )
 
@@ -64,12 +64,12 @@ func getCurrentCSGOUpdate() string {
 	body := string(preBody)
 	postDateIndex := strings.Index(body, `class="post_date"`)
 	date := body[postDateIndex+18 : postDateIndex+28]
-	
+
 	return date
 }
 
 type SOffsets struct {
-	Timestamp  int        `json:"timestamp"`
+	Timestamp  int         `json:"timestamp"`
 	Signatures SSignatures `json:"signatures"`
 	Netvars    SNetvars    `json:"netvars"`
 }

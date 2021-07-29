@@ -2,28 +2,57 @@ package memory
 
 import (
 	"bytes"
-	"fmt"
+	"errors"
 	"unsafe"
 )
 
-func GetProcessID(process string) (uint32, bool) {
+func GetProcessByName(process string) (Process, bool) {
 	var snap HANDLE
 	var pe32 PROCESSENTRY32
 	snap = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0)
-	fmt.Println(snap)
+	defer CloseHandle(snap)
 	pe32.DwSize = uint32(unsafe.Sizeof(pe32))
 	exit := Process32First(snap, &pe32)
 	if !exit {
-		CloseHandle(snap)
-		return 0, false
+		return Process{}, false
 	} else {
-		for i := true; i; i = Process32Next(snap, &pe32) {
-			parsed := parseint8(pe32.SzExeFile[:])
-			if parsed == process {
-				return pe32.Th32ProcessID, true
+		for Process32Next(snap, &pe32) {
+			proc, _ := GetProcess(pe32.Th32ProcessID)
+			if proc.Name == process {
+				proc.OpenProcess()
+
+				return proc, true
 			}
 		}
-		return 0, false
+		return Process{}, false
+	}
+
+}
+
+func GetProcess(PID uint32) (Process, error) {
+	var pe32 MODULEENTRY32
+	pe32.DwSize = uint32(unsafe.Sizeof(pe32))
+	snap := CreateToolhelp32Snapshot(TH32CS_SNAPMODULE|TH32CS_SNAPMODULE32, PID)
+	defer CloseHandle(snap)
+	if Module32First(snap, &pe32) {
+		proc := Process{
+			Name:        parseint8(pe32.SzModule[:]),
+			Id:          PID,
+			BaseSize:    pe32.ModBaseSize,
+			BaseAddress: uintptr(unsafe.Pointer(pe32.ModBaseAddr)),
+			Modules:     map[string]Module{},
+		}
+		for Module32Next(snap, &pe32) {
+			proc.Modules[parseint8(pe32.SzModule[:])] = Module{
+				Name:        parseint8(pe32.SzModule[:]),
+				BaseSize:    pe32.DwSize,
+				BaseAddress: uintptr(unsafe.Pointer(pe32.ModBaseAddr)),
+			}
+		}
+
+		return proc, nil
+	} else {
+		return Process{}, errors.New("cannot open module snap")
 	}
 }
 

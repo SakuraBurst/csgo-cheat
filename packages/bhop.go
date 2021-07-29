@@ -1,27 +1,22 @@
 package packages
 
 import (
-	"time"
-	"unsafe"
-
-	"github.com/barbarbar338/csgo-cheat-go/memory"
-	"github.com/barbarbar338/csgo-cheat-go/offset"
-	"github.com/barbarbar338/csgo-cheat-go/utils"
+	errorhelper "github.com/SakuraBurst/csgo-cheat/errorHelper"
+	"github.com/SakuraBurst/csgo-cheat/memory"
+	"github.com/SakuraBurst/csgo-cheat/offset"
+	"github.com/SakuraBurst/csgo-cheat/utils"
 )
 
-var jump = uintptr(0x6)
-
-func Bhop() {
+func Bhop(proc memory.Process) {
 	if memory.GetAsyncKeyState(32) > 0 {
-		player := utils.GetPlayer()
-
-		var onGround uintptr
-		memory.ReadProcessMemory(utils.Process, memory.LPCVOID(player+uintptr(offset.Netvars.MFFlags)), &onGround, 1)
-
-		if onGround == 1 || onGround == 7 {
-			memory.WriteProcessMemory(utils.Process, uintptr(utils.ClientDLL.Addr)+uintptr(offset.Signatures.DwForceJump), unsafe.Pointer(&jump), unsafe.Sizeof(jump))
+		player := utils.GetPlayer(proc)
+		client := utils.GetClient(proc)
+		onGround, err := proc.ReadBytes(player.BaseAddress+uintptr(offset.Netvars.MFFlags), 1)
+		errorhelper.CheckErrorAndLog(err)
+		if onGround[0] == 1 || onGround[0] == 7 {
+			err = proc.WriteInt(client+uintptr(offset.Signatures.DwForceJump), 6)
+			errorhelper.CheckErrorAndLog(err)
 		}
 	}
 
-	time.Sleep(time.Millisecond * 3)
 }
