@@ -1,12 +1,13 @@
 # 🔥 CS:GO Cheat Made With GoLang
-
+# 🔥 Originaly created by https://github.com/barbarbar338/csgo-cheat-go
 A simple CS:GO cheat written in GoLang (WIP)
 
 # ✨ Features
 
 -   🐇 Bunny Hop
 -   ✨ No Flash
-
+-   🧱 Glow hack
+-   ⚾ Trigger
 # 🎈 Starting Cheat
 
 -   Download GoLang from https://golang.org/
